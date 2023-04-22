@@ -12,7 +12,7 @@ namespace Script.Pub.Pool
     {
         public bool collectionChecks = true;
         //字典
-        private Dictionary<String, ObjectPool<GameObject>> _pools;
+        private Dictionary<String, ObjectPool<GameObject>> _pools = new();
         //预制体路径
         private String _prefabPath;
         //父物体
@@ -29,10 +29,10 @@ namespace Script.Pub.Pool
         public ObjectPool<GameObject> GetObjectPoolByName(String prefabPath,Transform parent,int minPoolSize,int maxPoolSize
             ,Func<GameObject> createFunc,Action<GameObject> getAction,Action<GameObject> releaseAction,Action<GameObject> destroyAction)
         {
-            _prefabPath = prefabPath;
-            _parents = parent;
             if (!_pools.ContainsKey(prefabPath))
             {
+                _prefabPath = prefabPath;
+                _parents = parent;
                 createFunc ??= OnCreatePoolItem;
                 getAction ??= OnGetPoolItem;
                 releaseAction ??= OnReleasePoolItem;
@@ -69,7 +69,8 @@ namespace Script.Pub.Pool
         //用预制体路径作为字典的key（路径不用包括Assets 和 Resources ）
         private GameObject OnCreatePoolItem()
         {
-            return Object.Instantiate(Resources.Load<GameObject>(_prefabPath),_parents);
+            GameObject o = GameObject.Instantiate(Resources.Load<GameObject>(_prefabPath),_parents);
+            return o;
         }
  
     }
