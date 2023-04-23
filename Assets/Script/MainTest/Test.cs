@@ -9,14 +9,14 @@ namespace Script.MainTest
 {
     public class Test : MonoBehaviour
     {
-        private ObjectPool<GameObject> _gemPool;
-        private ObjectPool<GameObject> _coinPool;
+        private PrefabPool _gemPool;
+        private PrefabPool _coinPool;
         private void Start()
         {
             //单例获取basePool
-            BasePool basePool = SingletonBaseManager<BasePool>.GetInstance();
-            _gemPool = basePool.GetObjectPoolByName("Gem", transform, 10, 30, null, null, null, null);
-            _coinPool = basePool.GetObjectPoolByName("Coin", transform, 10, 30, null, null, null, null);
+            BasePoolMap basePoolMap = SingletonBaseManager<BasePoolMap>.GetInstance();
+            _gemPool = basePoolMap.GetPoolByPrefabPath("Gem", transform, 10, 30,true, null, null, null, null);
+            _coinPool = basePoolMap.GetPoolByPrefabPath("Coin", transform, 10, 30, true, null,null, null, null);
         }
         
         private void Update()
