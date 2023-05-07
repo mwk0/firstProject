@@ -1,9 +1,9 @@
-﻿using System;
+﻿
+using Script.Entity;
 using Script.Pub.Pool;
 using Script.Pub.Singletonbase;
 using UnityEngine;
-using UnityEngine.Pool;
-using Object = System.Object;
+
 
 namespace Script.MainTest
 {
@@ -17,6 +17,9 @@ namespace Script.MainTest
             BasePoolMap basePoolMap = SingletonBaseManager<BasePoolMap>.GetInstance();
             _gemPool = basePoolMap.GetPoolByPrefabPath("Gem", transform, 10, 30,true, null, null, null, null);
             _coinPool = basePoolMap.GetPoolByPrefabPath("Coin", transform, 10, 30, true, null,null, null, null);
+            //测试从menu场景传递来的参数
+            EmptyObjectForParamEntity paramEntity = SingletonMonoManager<EmptyObjectForParamEntity>.GetInstance();
+            Debug.Log(paramEntity._param["menu"]);
         }
         
         private void Update()
