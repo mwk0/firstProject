@@ -26,6 +26,7 @@ namespace Script.AutoChess
         {
             if (currentBehave != AutoChessConstant.CreatureBehaveAttack)
             {
+                Debug.Log("移动："+transform.position.x);
                 GameObject firstEnemy = GetFirstEnemy(out currentBehave);
                 if (firstEnemy == null)//没有敌人了
                 {
@@ -36,8 +37,6 @@ namespace Script.AutoChess
                 {
                     if (currentBehave == AutoChessConstant.CreatureBehaveMove)
                     {
-                        //转向
-                        transform.LookAt(firstEnemy.transform);
                         //敌人在身后要把图片翻转
                         gameObject.GetComponent<SpriteRenderer>().flipX = transform.position.x > firstEnemy.transform.position.x;
                         //移动
@@ -47,15 +46,21 @@ namespace Script.AutoChess
                     }
                 }
             }
+            else
+            {
+                _rigidbody2D.velocity = Vector2.zero;
+            }
         }
         
         private void OnCollisionEnter2D(Collision2D other)
         {
+            Debug.Log("发生碰撞");
             checkCollisionForBehave(other);
         }
 
         private void OnCollisionExit2D(Collision2D other)
         {
+            Debug.Log("退出碰撞");
             GameObject otherObj = other.gameObject;
             if (otherObj.tag.Equals(AutoChessConstant.CreatureTagEnemy))
             {
@@ -65,6 +70,7 @@ namespace Script.AutoChess
 
         private void OnCollisionStay2D(Collision2D other)
         {
+            Debug.Log("持续碰撞");
             checkCollisionForBehave(other);
         }
         
