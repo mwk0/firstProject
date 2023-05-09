@@ -14,10 +14,12 @@ namespace Script.AutoChess
         public float health;
         public float mana;
 
+        private Rigidbody2D _rigidbody2D;
+        
         public int currentBehave = AutoChessConstant.CreatureBehaveStand;
         private void Start()
         {
-           
+            _rigidbody2D = GetComponent<Rigidbody2D>();
         }
 
         private void Update()
@@ -28,6 +30,7 @@ namespace Script.AutoChess
                 if (firstEnemy == null)//没有敌人了
                 {
                     //结束战斗
+                    currentBehave = AutoChessConstant.CreatureBehaveStand;
                 }
                 else
                 {
@@ -38,7 +41,9 @@ namespace Script.AutoChess
                         //敌人在身后要把图片翻转
                         gameObject.GetComponent<SpriteRenderer>().flipX = transform.position.x > firstEnemy.transform.position.x;
                         //移动
-                        transform.Translate(firstEnemy.transform.position * (Time.deltaTime * _speed));
+                        Vector2 direction = ((firstEnemy.transform.position - transform.position).normalized);
+                        _rigidbody2D.velocity = direction * _speed;
+                        //transform.Translate((firstEnemy.transform.position - transform.position) * (Time.deltaTime * _speed));
                     }
                 }
             }
