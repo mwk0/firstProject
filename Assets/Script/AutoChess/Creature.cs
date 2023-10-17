@@ -7,12 +7,12 @@ namespace Script.AutoChess
     {
         
         public String _name;
-        public int _level;
-        public float _speed;
-        public float _attackRange;
+        private int _level = 1;
+        private float _speed = 100;
+        private float _attackRange = 0;
 
-        public float health;
-        public float mana;
+        private float health = 100;
+        private float mana = 0;
 
         private Rigidbody2D _rigidbody2D;
         
@@ -20,42 +20,49 @@ namespace Script.AutoChess
         private void Start()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
+            //统一设置阻力
+            _rigidbody2D.drag = 1000;
         }
 
         private void Update()
         {
-            if (currentBehave != AutoChessConstant.CreatureBehaveAttack)
+            Debug.Log(currentBehave);
+            GameObject firstEnemy = JudgeBehave(out currentBehave);
+            if (firstEnemy == null)
             {
-                GameObject firstEnemy = GetFirstEnemy(out currentBehave);
-                if (firstEnemy == null)//没有敌人了
+                //结束战斗
+            }
+            else
+            {
+                //敌人在身后要把图片翻转
+                gameObject.GetComponent<SpriteRenderer>().flipX = transform.position.x > firstEnemy.transform.position.x;
+                
+                if (currentBehave == AutoChessConstant.CreatureBehaveMove)
                 {
-                    //结束战斗
-                    currentBehave = AutoChessConstant.CreatureBehaveStand;
-                }
-                else
+                    Move((firstEnemy.transform.position - transform.position).normalized);
+                }else if (currentBehave == AutoChessConstant.CreatureBehaveAttack)
                 {
-                    if (currentBehave == AutoChessConstant.CreatureBehaveMove)
-                    {
-                        //转向
-                        transform.LookAt(firstEnemy.transform);
-                        //敌人在身后要把图片翻转
-                        gameObject.GetComponent<SpriteRenderer>().flipX = transform.position.x > firstEnemy.transform.position.x;
-                        //移动
-                        Vector2 direction = ((firstEnemy.transform.position - transform.position).normalized);
-                        _rigidbody2D.velocity = direction * _speed;
-                        //transform.Translate((firstEnemy.transform.position - transform.position) * (Time.deltaTime * _speed));
-                    }
+                    Attack();
+                }else if (currentBehave == AutoChessConstant.CreatureBehaveSkill)
+                {
+                    Skill();
+                }else if (currentBehave == AutoChessConstant.CreatureBehaveStand)
+                {
+                    Stand();
                 }
             }
+            
         }
         
         private void OnCollisionEnter2D(Collision2D other)
         {
+            Debug.Log("发生碰撞");
             checkCollisionForBehave(other);
         }
 
         private void OnCollisionExit2D(Collision2D other)
         {
+            Debug.Log("退出碰撞");
             GameObject otherObj = other.gameObject;
             if (otherObj.tag.Equals(AutoChessConstant.CreatureTagEnemy))
             {
@@ -65,6 +72,7 @@ namespace Script.AutoChess
 
         private void OnCollisionStay2D(Collision2D other)
         {
+            Debug.Log("持续碰撞");
             checkCollisionForBehave(other);
         }
         
@@ -81,7 +89,7 @@ namespace Script.AutoChess
             }
         }
 
-        private GameObject GetFirstEnemy(out int behave)
+        private GameObject JudgeBehave(out int behave)
         {
             //获取所有敌人标签的物体
             GameObject[] enemyList = GameObject.FindGameObjectsWithTag(AutoChessConstant.CreatureTagEnemy);
@@ -108,11 +116,42 @@ namespace Script.AutoChess
             }
             else
             {
-                behave = AutoChessConstant.CreatureBehaveMove;
+                //当前不是攻击状态才移动
+                if (this.currentBehave != AutoChessConstant.CreatureBehaveAttack)
+                {
+                    behave = AutoChessConstant.CreatureBehaveMove;
+                }
+                else
+                {
+                    behave = AutoChessConstant.CreatureBehaveAttack;
+                }
+                    
             }
             //最近的敌人物体
             GameObject firstEnemy = enemyList[enemyIndex];
             return firstEnemy;
+        }
+
+        private void Move(Vector2 direction)
+        {
+            //播放动画
+            //移动
+            _rigidbody2D.velocity = direction * _speed;
+        }
+
+        private void Attack()
+        {
+            //播放动画
+        }
+
+        private void Skill()
+        {
+            
+        }
+
+        private void Stand()
+        {
+            
         }
         
     }
