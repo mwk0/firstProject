@@ -21,12 +21,12 @@ namespace Script.AutoChess
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
             //统一设置阻力
-            _rigidbody2D.drag = 1000;
+            //_rigidbody2D.drag = 100;
         }
 
         private void Update()
         {
-            Debug.Log(currentBehave);
+            
             GameObject firstEnemy = JudgeBehave(out currentBehave);
             if (firstEnemy == null)
             {
@@ -40,6 +40,7 @@ namespace Script.AutoChess
                 if (currentBehave == AutoChessConstant.CreatureBehaveMove)
                 {
                     Move((firstEnemy.transform.position - transform.position).normalized);
+                  
                 }else if (currentBehave == AutoChessConstant.CreatureBehaveAttack)
                 {
                     Attack();
@@ -51,42 +52,46 @@ namespace Script.AutoChess
                     Stand();
                 }
             }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                
+                GameObject.Find("bit").SetActive(false);
+            }
             
         }
-        
+
         private void OnCollisionEnter2D(Collision2D other)
         {
-            Debug.Log("发生碰撞");
-            checkCollisionForBehave(other);
+            GameObject otherObj = other.collider.gameObject;
+            if (otherObj.tag.Equals(AutoChessConstant.CreatureTagEnemy))
+            {
+                currentBehave = AutoChessConstant.CreatureBehaveAttack;
+                _rigidbody2D.bodyType = RigidbodyType2D.Static;
+            }
+            //碰撞后，防止撞飞
+            
+            //other.otherCollider.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         }
 
         private void OnCollisionExit2D(Collision2D other)
         {
-            Debug.Log("退出碰撞");
-            GameObject otherObj = other.gameObject;
-            if (otherObj.tag.Equals(AutoChessConstant.CreatureTagEnemy))
-            {
-                currentBehave = AutoChessConstant.CreatureBehaveMove;
-            }
+            currentBehave = AutoChessConstant.CreatureBehaveMove;
+            //退出碰撞，设置身体类型
+            _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
+            //other.otherCollider.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
         }
 
         private void OnCollisionStay2D(Collision2D other)
         {
-            Debug.Log("持续碰撞");
-            checkCollisionForBehave(other);
-        }
-        
-        private void checkCollisionForBehave(Collision2D other)
-        {
-            GameObject otherObj = other.gameObject;
+            GameObject otherObj = other.collider.gameObject;
+            Debug.Log(otherObj.tag);
             if (otherObj.tag.Equals(AutoChessConstant.CreatureTagEnemy))
             {
                 currentBehave = AutoChessConstant.CreatureBehaveAttack;
+                _rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
             }
-            else
-            {
-                currentBehave = AutoChessConstant.CreatureBehaveMove;
-            }
+            
         }
 
         private GameObject JudgeBehave(out int behave)
@@ -109,6 +114,7 @@ namespace Script.AutoChess
                     enemyIndex = i;
                 }
             }
+            Debug.Log(currentBehave);
             //判断是否在_attackRange内
             if (_attackRange >= shortestDistance)
             {
