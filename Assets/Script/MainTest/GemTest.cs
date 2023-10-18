@@ -18,7 +18,7 @@ namespace Script.MainTest
             Debug.Log(name);
             var substring = name.Substring(0, name.IndexOf("Clone", StringComparison.Ordinal)-1);
             Debug.Log(substring);
-            _pool = SingletonBaseManager<BasePoolMap>.GetInstance().GetPoolByPrefabPath(substring,transform,10,30,true,null,null,null,null);
+            _pool = BasePoolMap.GetInstance().GetPoolByPrefabPath(substring,transform,10,30,true,null,null,null,null);
         }
 
         private void OnEnable()

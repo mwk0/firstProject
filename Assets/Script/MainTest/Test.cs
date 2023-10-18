@@ -14,11 +14,11 @@ namespace Script.MainTest
         private void Start()
         {
             //单例获取basePool
-            BasePoolMap basePoolMap = SingletonBaseManager<BasePoolMap>.GetInstance();
+            BasePoolMap basePoolMap = BasePoolMap.GetInstance();
             _gemPool = basePoolMap.GetPoolByPrefabPath("Gem", transform, 10, 30,true, null, null, null, null);
             _coinPool = basePoolMap.GetPoolByPrefabPath("Coin", transform, 10, 30, true, null,null, null, null);
             //测试从menu场景传递来的参数
-            EmptyObjectForParamEntity paramEntity = SingletonMonoManager<EmptyObjectForParamEntity>.GetInstance();
+            EmptyObjectForParamEntity paramEntity = EmptyObjectForParamEntity.GetInstance();
             Debug.Log(paramEntity._param["menu"]);
         }
         

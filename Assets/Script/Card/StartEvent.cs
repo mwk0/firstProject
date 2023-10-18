@@ -20,7 +20,7 @@ namespace Script.Card
         {
             //deck乱序转队列，形成卡组，第一次洗牌
             //卡组列表
-            List<CardInfo> deckCards = SingletonBaseManager<AllParamEntity>.GetInstance().GETDeckCards();
+            List<CardInfo> deckCards = AllParamEntity.GetInstance().GETDeckCards();
             ShuffleDeck(deckCards);
             //抽卡
             DrawInitCards();
@@ -41,7 +41,7 @@ namespace Script.Card
         //初始抽卡 7张
         private void DrawInitCards()
         {
-            BasePoolMap basePoolMap = SingletonBaseManager<BasePoolMap>.GetInstance();
+            BasePoolMap basePoolMap = BasePoolMap.GetInstance();
             _cardPool = basePoolMap.GetPoolByPrefabPath("card", transform, 10, 30,true, null, null, null, null);
             
         }

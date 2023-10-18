@@ -11,9 +11,9 @@ namespace Script.MainTest
         private void Start()
         {
             //开始游戏
-            AllParamEntity allParams = SingletonBaseManager<AllParamEntity>.GetInstance();
+            AllParamEntity allParams = AllParamEntity.GetInstance();
             List<CardInfo> deck = allParams.GETDeckCards();
-            for (int i = 0; i < 21; i++)
+            for (int i = 0; i < 20; i++)
             {
                 deck.Add(new CardInfo("00"+i,"这是编号00"+i+"的卡"));
             }

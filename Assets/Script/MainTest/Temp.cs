@@ -9,7 +9,7 @@ namespace Script.MainTest
     {
         private void Start()
         {
-            AllParamEntity allParamEntity = SingletonBaseManager<AllParamEntity>.GetInstance();
+            AllParamEntity allParamEntity = AllParamEntity.GetInstance();
             Debug.Log(allParamEntity.GETDeckCards().Count);
         }
     }
