@@ -1,21 +1,17 @@
+using UnityEngine;
+
 namespace Script.Entity
 {
+    [CreateAssetMenu(fileName = "newCard",menuName = "card")]
     //卡牌信息实体类
-    public class CardInfo
+    public class CardInfo : ScriptableObject
     {
         
         //名称
-        private string _name;
-
-
-
-        //描述
-        private string _desc;
-
-        public CardInfo(string name,string desc)
-        {
-            _name = name;
-            _desc = desc;
-        }
+        public string carName;
+        public Sprite cardArt;
+        public string cardText;
+        public int cardCost;
+        
     }
 }

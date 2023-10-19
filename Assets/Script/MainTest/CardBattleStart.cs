@@ -15,7 +15,7 @@ namespace Script.MainTest
             List<CardInfo> deck = allParams.GETDeckCards();
             for (int i = 0; i < 20; i++)
             {
-                deck.Add(new CardInfo("00"+i,"这是编号00"+i+"的卡"));
+                
             }
             Debug.Log(allParams.GETDeckCards().Count);
         }
