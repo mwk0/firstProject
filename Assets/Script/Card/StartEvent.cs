@@ -18,13 +18,18 @@ namespace Script.Card
         private List<CardInfo> _handCards = new List<CardInfo>();//手牌
         private Queue<CardInfo> _deck = new Queue<CardInfo>();//卡组
         private int _init_handCards_Num = 7;
-        private Vector3 deck_icon_position = GameObject.Find("deck").transform.localPosition;//卡组的位置，抽卡从这里出现
+        private Vector3 deck_icon_position;//卡组的位置，抽卡从这里出现
+        private GameObject handCardArea;//手牌区域
+        private GameObject leftBoot;
         
         private void Start()
         {
+            deck_icon_position = GameObject.Find("deck").transform.position;
+            handCardArea = GameObject.Find("handCardArea");
+            leftBoot = GameObject.Find("leftBoot");
             //初始化对象池
             BasePoolMap basePoolMap = BasePoolMap.GetInstance();
-            _cardPool = basePoolMap.GetPoolByPrefabPath("card", transform, 10, 30,true, null, null, null, null);
+            _cardPool = basePoolMap.GetPoolByPrefabPath("prefabs/cardFrame", handCardArea.transform, 10, 30,true, null, null, null, null);
             /*deck乱序转队列，形成卡组，第一次洗牌*/
             //卡组列表
             List<CardInfo> deckCards = AllParamEntity.GetInstance().GETDeckCards();
@@ -61,13 +66,28 @@ namespace Script.Card
             {
                 CardInfo card = _deck.Dequeue();
                 _handCards.Add(card);
+                Debug.Log(card.cardArt.name);
+                //前端
+                var cardFrame = _cardPool.Get();
+                CardCreater create = cardFrame.GetComponent<CardCreater>();
+                create.InitCardCreaterByCardinfo(card);
+                //设置卡牌初始位置
+                Debug.Log(deck_icon_position);
+                cardFrame.transform.position = deck_icon_position;
+                //目标位置
+                RectTransform leftHandAreaRect = handCardArea.GetComponent<RectTransform>();
+                Debug.Log(leftHandAreaRect.offsetMin.x);
+                //Vector3 targetPosition = GetHandCardTargetPosition(leftHandAreaRect.offsetMin.x)
+                //移动卡牌到手牌区
+                LeanTween.moveLocalX(cardFrame, 50f * i, 2f).setEaseInOutQuint();
             }
-            //前端
-            var gameObjectCard = _cardPool.Get();
-            //设置卡牌初始位置
-            gameObjectCard.transform.localPosition = deck_icon_position;
-            //移动卡牌到手牌区
-            gameObjectCard.GetComponent<Rigidbody2D>().velocity = Vector2.left;
+            
+        }
+
+        //计算抽卡时 从卡组移动到手牌的位置，
+        private Vector3 GetHandCardTargetPosition(float leftStartX,float handAreaWidth,int cardNum)
+        {
+            return Vector3.zero;
         }
 
     }

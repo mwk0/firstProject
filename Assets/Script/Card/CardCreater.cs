@@ -14,15 +14,15 @@ namespace Script.Card
         public Image image;
         public TextMeshProUGUI cardText;
         public TextMeshProUGUI cardCost;
-        public CardInfo card_1;
         
-        
-        private void Start()
+
+        //用cardInfo初始化
+        public void InitCardCreaterByCardinfo(CardInfo cardInfo)
         {
-            cardName = card_1.carName;
-            image.sprite = card_1.cardArt;
-            cardText.text = card_1.cardText;
-            cardCost.text = card_1.cardCost.ToString();
+            cardName = cardInfo.carName;
+            image.sprite = cardInfo.cardArt;
+            cardText.text = cardInfo.cardText;
+            cardCost.text = cardInfo.cardCost.ToString();
         }
     }
 }

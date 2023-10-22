@@ -18,7 +18,7 @@ namespace Script.Menu
             param.Add("menu","start");
             
             Thread.Sleep(2000);*/
-            SceneManager.LoadScene("TestScene");
+            SceneManager.LoadScene("bkmBattle");
         }
     }
 }
