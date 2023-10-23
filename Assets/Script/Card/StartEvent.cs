@@ -5,19 +5,28 @@ using Script.Entity;
 using Script.Pub.Pool;
 using Script.Pub.Singletonbase;
 using Script.Util;
+using Unity.VisualScripting;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Script.Card
 {
     //进入战斗场景触发的事件
     public class StartEvent : MonoBehaviour
     {
+        //cardFrame预制体的宽带
+        public static float CardFrameWidth;
+        //手牌区域的宽度
+        public static float HandAreaWidth;
+        //手牌区域左右空格
+        public static float HandCardPadding = 20;
         
 
         private PrefabPool _cardPool;//card对象池
         private List<CardInfo> _handCards = new List<CardInfo>();//手牌
+        private List<GameObject> _handCardFrames = new List<GameObject>();//手牌物体
         private Queue<CardInfo> _deck = new Queue<CardInfo>();//卡组
-        private int _init_handCards_Num = 7;
+        private int _init_handCards_Num = 30;
         private Vector3 deck_icon_position;//卡组的位置，抽卡从这里出现
         private GameObject handCardArea;//手牌区域
         private GameObject leftBoot;
@@ -27,6 +36,10 @@ namespace Script.Card
             deck_icon_position = GameObject.Find("deck").transform.position;
             handCardArea = GameObject.Find("handCardArea");
             leftBoot = GameObject.Find("leftBoot");
+
+            CardFrameWidth = Resources.Load("prefabs/cardFrame").GetComponent<RectTransform>().rect.width;
+            HandAreaWidth = handCardArea.GetComponent<RectTransform>().rect.width;
+            
             //初始化对象池
             BasePoolMap basePoolMap = BasePoolMap.GetInstance();
             _cardPool = basePoolMap.GetPoolByPrefabPath("prefabs/cardFrame", handCardArea.transform, 10, 30,true, null, null, null, null);
@@ -61,33 +74,64 @@ namespace Script.Card
         //初始抽卡 
         private void DrawInitCards()
         {
-            //后端
+            
             for (int i = 0; i < _init_handCards_Num; i++)
             {
                 CardInfo card = _deck.Dequeue();
                 _handCards.Add(card);
                 Debug.Log(card.cardArt.name);
                 //前端
-                var cardFrame = _cardPool.Get();
+                GameObject cardFrame = _cardPool.Get();
                 CardCreater create = cardFrame.GetComponent<CardCreater>();
                 create.InitCardCreaterByCardinfo(card);
                 //设置卡牌初始位置
                 Debug.Log(deck_icon_position);
                 cardFrame.transform.position = deck_icon_position;
-                //目标位置
-                RectTransform leftHandAreaRect = handCardArea.GetComponent<RectTransform>();
-                Debug.Log(leftHandAreaRect.offsetMin.x);
-                //Vector3 targetPosition = GetHandCardTargetPosition(leftHandAreaRect.offsetMin.x)
-                //移动卡牌到手牌区
-                LeanTween.moveLocalX(cardFrame, 50f * i, 2f).setEaseInOutQuint();
+                _handCardFrames.Add(cardFrame);
             }
-            
+
+            ResetHandCardPositon();
+
+
         }
 
-        //计算抽卡时 从卡组移动到手牌的位置，
-        private Vector3 GetHandCardTargetPosition(float leftStartX,float handAreaWidth,int cardNum)
+        private void ResetHandCardPositon()
         {
-            return Vector3.zero;
+            float[] cardXPostionArray = GetHandCardTargetPosition(_handCardFrames.Count);
+            for (int i = 0; i < _handCardFrames.Count; i++)
+            {
+                LeanTween.moveLocalX(_handCardFrames[i], cardXPostionArray[i], 2f).setEaseInOutQuint();
+                
+            }
+        }
+        
+        //计算抽卡时 从卡组移动到手牌的位置，
+        private float[] GetHandCardTargetPosition(int handCardNum)
+        {
+            float[] cardXPostionArray = new float[handCardNum];
+            cardXPostionArray[0] = HandCardPadding;//第一张牌的位置在可用区域最左侧
+            //可用区域宽度
+            float areaWidth = HandAreaWidth - CardFrameWidth - (HandCardPadding * 2);
+            Debug.Log(areaWidth);
+            if (CardFrameWidth * handCardNum < areaWidth)//手牌很少
+            {
+                for (int i = 1; i < handCardNum; i++)
+                {
+                    cardXPostionArray[i] = cardXPostionArray[0] + CardFrameWidth*i;
+                }
+            }
+            else//手牌较多，覆盖排列
+            {
+                float space = areaWidth / handCardNum;
+                Debug.Log(space);
+                for (int i = 1; i < handCardNum; i++)
+                {
+                    cardXPostionArray[i] = cardXPostionArray[0] + space * i;
+                    Debug.Log(cardXPostionArray[i]);
+                }
+            }
+
+            return cardXPostionArray;
         }
 
     }

@@ -23,7 +23,7 @@ namespace Script.MainTest
             int allCardCount = AllParamEntity._allCardInfo.Length;
             List<CardInfo> deck = allParams.GETDeckCards();
             Random random = new Random();
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 100; i++)
             {
                 deck.Add(AllParamEntity._allCardInfo[random.Next(allCardCount)]);
             }
