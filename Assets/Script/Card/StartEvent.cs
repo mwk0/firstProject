@@ -98,14 +98,15 @@ namespace Script.Card
         private void ResetHandCardPositon()
         {
             float[] cardXPostionArray = GetHandCardTargetPosition(_handCardFrames.Count);
+            //动画执行链
+            LTSeq seq = LeanTween.sequence();
             for (int i = 0; i < _handCardFrames.Count; i++)
             {
-                LeanTween.moveLocalX(_handCardFrames[i], cardXPostionArray[i], 2f).setEaseInOutQuint();
-                
+                seq.append(LeanTween.moveLocalX(_handCardFrames[i], cardXPostionArray[i], 1f).setEaseInOutQuint());
             }
         }
         
-        //计算抽卡时 从卡组移动到手牌的位置，
+        //计算所有手牌的位置
         private float[] GetHandCardTargetPosition(int handCardNum)
         {
             float[] cardXPostionArray = new float[handCardNum];
