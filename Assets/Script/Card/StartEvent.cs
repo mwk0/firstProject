@@ -20,36 +20,38 @@ namespace Script.Card
         public static float HandAreaWidth;
         //手牌区域左右空格
         public static float HandCardPadding = 20;
-        
 
-        private PrefabPool _cardPool;//card对象池
-        private List<CardInfo> _handCards = new List<CardInfo>();//手牌
-        private List<GameObject> _handCardFrames = new List<GameObject>();//手牌物体
-        private Queue<CardInfo> _deck = new Queue<CardInfo>();//卡组
+        private GameObject _cardFramePrefab;//卡牌预制体
+        private List<GameObject> _handCardFrames = new List<GameObject>();//手牌
+        private Queue<GameObject> _deckQueue = new Queue<GameObject>();//卡组
+        
         private int _init_handCards_Num = 30;
-        private Vector3 deck_icon_position;//卡组的位置，抽卡从这里出现
+        private Vector3 deck_icon_position;//卡组的位置，抽卡从这里开始移动
         private GameObject handCardArea;//手牌区域
-        private GameObject leftBoot;
+        private GameObject deckCardArea;//卡组区域
+        private GameObject graveArea;//墓地区域
+        private Vector3 deckOutPosition;//屏幕外的卡组卡牌位置
+        private Vector3 graveOutPosition;//屏幕外的墓地卡牌位置
+       
         
         private void Start()
         {
-            deck_icon_position = GameObject.Find("deck").transform.position;
+            _cardFramePrefab = (GameObject) Resources.Load("prefabs/cardFrame");
             handCardArea = GameObject.Find("handCardArea");
-            leftBoot = GameObject.Find("leftBoot");
-
-            CardFrameWidth = Resources.Load("prefabs/cardFrame").GetComponent<RectTransform>().rect.width;
+            deckCardArea = GameObject.Find("deck");
+            graveArea = GameObject.Find("grave");
+            deck_icon_position = deckCardArea.transform.position;
+            deckOutPosition = GameObject.Find("deckOut").transform.position;
+            graveOutPosition = GameObject.Find("graveOut").transform.position;
+            CardFrameWidth = _cardFramePrefab.GetComponent<RectTransform>().rect.width;
             HandAreaWidth = handCardArea.GetComponent<RectTransform>().rect.width;
             
-            //初始化对象池
-            BasePoolMap basePoolMap = BasePoolMap.GetInstance();
-            _cardPool = basePoolMap.GetPoolByPrefabPath("prefabs/cardFrame", handCardArea.transform, 10, 30,true, null, null, null, null);
+            //生成卡组
             /*deck乱序转队列，形成卡组，第一次洗牌*/
-            //卡组列表
-            List<CardInfo> deckCards = AllParamEntity.GetInstance().GETDeckCards();
-            ShuffleDeck(deckCards);
-            //获取手牌数据
-            DrawInitCards();
-            
+            List<CardInfo> deckCardInfoList = AllParamEntity.GetInstance().GETDeckCards();
+            InitDeck(deckCardInfoList,_cardFramePrefab);
+            //抽初始卡牌
+            DrawCards(_init_handCards_Num);
         }
         
         
@@ -57,53 +59,65 @@ namespace Script.Card
         {
            
         }
-        
-        
 
-        //洗牌
-        private void ShuffleDeck(List<CardInfo> cardList)
+
+
+        //游戏开始生成卡组
+        private void InitDeck(List<CardInfo> deckCardInfoList,GameObject cardFramePrefab)
         {
-           ListUtil.Shuffle(cardList);
-           foreach (var card in cardList)
-           {
-               _deck.Enqueue(card);
-           }
-           
-        }
-        
-        //初始抽卡 
-        private void DrawInitCards()
-        {
-            
-            for (int i = 0; i < _init_handCards_Num; i++)
+            //乱序
+            ListUtil.Shuffle(deckCardInfoList);
+            foreach (var cardInfo in deckCardInfoList)
             {
-                CardInfo card = _deck.Dequeue();
-                _handCards.Add(card);
-                Debug.Log(card.cardArt.name);
-                //前端
-                GameObject cardFrame = _cardPool.Get();
-                CardCreater create = cardFrame.GetComponent<CardCreater>();
-                create.InitCardCreaterByCardinfo(card);
-                //设置卡牌初始位置
-                Debug.Log(deck_icon_position);
-                cardFrame.transform.position = deck_icon_position;
+                GameObject cardFrame = Instantiate(cardFramePrefab,deckCardArea.transform);
+                //缩小10倍
+                cardFrame.transform.localScale = new Vector3(0.1f, 0.1f, 1);
+                cardFrame.transform.position = deckOutPosition;//放到屏幕外
+                //设置卡牌信息
+                CardCreater cardCreater = cardFrame.GetComponent<CardCreater>();
+                cardCreater.cardInfo = cardInfo;
+                cardCreater.InitCardCreaterByCardinfo();
+                //加入卡组
+                _deckQueue.Enqueue(cardFrame);
+            }
+          
+        }
+
+        //摸牌
+        private void DrawCards(int num)
+        {
+            for (int i = 0; i < num; i++)
+            {
+                GameObject cardFrame = _deckQueue.Dequeue();
+                cardFrame.transform.parent = handCardArea.transform;
+                cardFrame.transform.position = deck_icon_position;//移动的起点为
                 _handCardFrames.Add(cardFrame);
             }
-
             ResetHandCardPositon();
-
-
         }
-
+        
+        //洗牌
+        private void ShuffleDeck(List<GameObject> cardFrameList)
+        {
+            ListUtil.Shuffle(cardFrameList);
+        }
+        
         private void ResetHandCardPositon()
         {
             float[] cardXPostionArray = GetHandCardTargetPosition(_handCardFrames.Count);
             //动画执行链
             LTSeq seq = LeanTween.sequence();
+            LTSeq seq1 = LeanTween.sequence(false);
             for (int i = 0; i < _handCardFrames.Count; i++)
             {
-                seq.append(LeanTween.moveLocalX(_handCardFrames[i], cardXPostionArray[i], 1f).setEaseInOutQuint());
+                LTDescr ltDescr = LeanTween.moveLocal(_handCardFrames[i], new Vector3(cardXPostionArray[i], 0, 0), 5f)
+                    .setEaseInOutQuart();
+                seq.append(ltDescr);
+                seq1.append(LeanTween.scale(_handCardFrames[i], Vector3.one, 5f));
             }
+            /*LeanTween.moveLocal(_handCardFrames[0], new Vector3(cardXPostionArray[0], 0, 0), 5f)
+                .setEaseInOutQuart();
+            LeanTween.scale(_handCardFrames[0], Vector3.one, 5f);*/
         }
         
         //计算所有手牌的位置
