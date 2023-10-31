@@ -31,7 +31,7 @@ namespace Script.Card
         private List<GameObject> _handCardFrames = new List<GameObject>();//手牌
         private Queue<GameObject> _deckQueue = new Queue<GameObject>();//卡组
 
-        private int _init_handCards_Num = 30;
+        private int _init_handCards_Num = 20;
         private Vector3 deck_icon_position;//卡组的位置，抽卡从这里开始移动
         private GameObject handCardArea;//手牌区域
         private GameObject deckCardArea;//卡组区域
@@ -89,8 +89,8 @@ namespace Script.Card
             foreach (var cardInfo in deckCardInfoList)
             {
                 GameObject cardFrame = Instantiate(_cardFramePrefab,deckCardArea.transform);
-                //缩小10倍
-                cardFrame.transform.localScale = new Vector3(0.1f, 0.1f, 1);
+                //缩小
+                cardFrame.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
                 cardFrame.transform.position = deckOutPosition;//放到屏幕外
                 //设置卡牌信息
                 CardCreater cardCreater = cardFrame.GetComponent<CardCreater>();
@@ -110,7 +110,7 @@ namespace Script.Card
             for (int i = 0; i < num; i++)
             {
                 GameObject cardFrame = _deckQueue.Dequeue();
-                cardFrame.transform.parent = handCardArea.transform;
+                cardFrame.transform.SetParent(handCardArea.transform);
                 cardFrame.transform.position = deck_icon_position;//移动的起点为
                 _handCardFrames.Add(cardFrame);
             }
@@ -128,13 +128,12 @@ namespace Script.Card
             float[] cardXPostionArray = GetHandCardTargetPosition(_handCardFrames.Count);
             //动画执行链
             LTSeq seq = LeanTween.sequence();
-            LTSeq seq1 = LeanTween.sequence(false);
             for (int i = 0; i < _handCardFrames.Count; i++)
             {
-                LTDescr ltDescr = LeanTween.moveLocal(_handCardFrames[i], new Vector3(cardXPostionArray[i], 0, 0), 5f)
+                LTDescr ltDescr = LeanTween.moveLocal(_handCardFrames[i], new Vector3(cardXPostionArray[i], 0, 0), 0.3f)
                     .setEaseInOutQuart();
                 seq.append(ltDescr);
-                seq1.append(LeanTween.scale(_handCardFrames[i], Vector3.one, 5f));
+                seq.append(LeanTween.scale(_handCardFrames[i], Vector3.one, 0.2f));
             }
             /*LeanTween.moveLocal(_handCardFrames[0], new Vector3(cardXPostionArray[0], 0, 0), 5f)
                 .setEaseInOutQuart();
