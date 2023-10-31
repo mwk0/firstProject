@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using Script.Entity;
+using Script.Pub.Event;
 using Script.Pub.Pool;
 using Script.Pub.Singletonbase;
 using Script.Util;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Diagnostics;
+using UnityEngine.Events;
 using Object = UnityEngine.Object;
 
 namespace Script.Card
@@ -14,6 +17,9 @@ namespace Script.Card
     //进入战斗场景触发的事件
     public class StartEvent : MonoBehaviour
     {
+        //事件系统
+        public static EventCenter EventCenter;
+
         //cardFrame预制体的宽带
         public static float CardFrameWidth;
         //手牌区域的宽度
@@ -24,7 +30,7 @@ namespace Script.Card
         private GameObject _cardFramePrefab;//卡牌预制体
         private List<GameObject> _handCardFrames = new List<GameObject>();//手牌
         private Queue<GameObject> _deckQueue = new Queue<GameObject>();//卡组
-        
+
         private int _init_handCards_Num = 30;
         private Vector3 deck_icon_position;//卡组的位置，抽卡从这里开始移动
         private GameObject handCardArea;//手牌区域
@@ -33,6 +39,16 @@ namespace Script.Card
         private Vector3 deckOutPosition;//屏幕外的卡组卡牌位置
         private Vector3 graveOutPosition;//屏幕外的墓地卡牌位置
        
+        private void Awake()
+        {
+            EventCenter = EventCenter.GetInstance();
+            /*EventCenter.AddListenerOne(AppConstant.event_initBattleGround,InitDeck);
+            EventCenter.AddListener(AppConstant.event_drawCards,drawCards);*/
+            Action<List<CardInfo>> initDeck = InitDeck;
+            Action<int> drawCards = DrawCards;
+            EventCenter.AddListener(EventDefine.initDeck,initDeck);
+            EventCenter.AddListener(EventDefine.drawCards,drawCards);
+        }
         
         private void Start()
         {
@@ -49,9 +65,12 @@ namespace Script.Card
             //生成卡组
             /*deck乱序转队列，形成卡组，第一次洗牌*/
             List<CardInfo> deckCardInfoList = AllParamEntity.GetInstance().GETDeckCards();
-            InitDeck(deckCardInfoList,_cardFramePrefab);
+            //InitDeck(deckCardInfoList);
+            EventCenter.TriggerEvent(EventDefine.initDeck,deckCardInfoList);
             //抽初始卡牌
-            DrawCards(_init_handCards_Num);
+            //DrawCards(_init_handCards_Num);
+            EventCenter.TriggerEvent(EventDefine.drawCards,_init_handCards_Num);
+            
         }
         
         
@@ -63,13 +82,13 @@ namespace Script.Card
 
 
         //游戏开始生成卡组
-        private void InitDeck(List<CardInfo> deckCardInfoList,GameObject cardFramePrefab)
+        private void InitDeck(List<CardInfo> deckCardInfoList)
         {
             //乱序
             ListUtil.Shuffle(deckCardInfoList);
             foreach (var cardInfo in deckCardInfoList)
             {
-                GameObject cardFrame = Instantiate(cardFramePrefab,deckCardArea.transform);
+                GameObject cardFrame = Instantiate(_cardFramePrefab,deckCardArea.transform);
                 //缩小10倍
                 cardFrame.transform.localScale = new Vector3(0.1f, 0.1f, 1);
                 cardFrame.transform.position = deckOutPosition;//放到屏幕外
@@ -82,6 +101,8 @@ namespace Script.Card
             }
           
         }
+        
+       
 
         //摸牌
         private void DrawCards(int num)
