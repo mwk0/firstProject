@@ -1,0 +1,13 @@
+{
+  "RECORDS": [
+    {
+      "id": "1",
+      "no": "B001",
+      "name": "挥舞",
+      "type": "1",
+      "range": "2",
+      "min_damage": "10",
+      "max_damage": "15"
+    }
+  ]
+}

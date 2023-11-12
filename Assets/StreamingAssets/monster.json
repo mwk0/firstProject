@@ -1,0 +1,17 @@
+{
+  "RECORDS": [
+    {
+      "id": "1",
+      "no": "M001",
+      "name": "骷髅",
+      "type": "不死族",
+      "level": "1",
+      "spritePath": "M001",
+      "attack": "10",
+      "health": "30",
+      "speed": "1",
+      "behavior": "B001,B002",
+      "desc": "弱鸡"
+    }
+  ]
+}
