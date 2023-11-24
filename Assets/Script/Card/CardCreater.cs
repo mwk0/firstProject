@@ -16,6 +16,7 @@ namespace Script.Card
         public TextMeshProUGUI cardText;
         public TextMeshProUGUI cardCost;
         public CardInfo cardInfo;
+
         
 
         //用cardInfo初始化
@@ -30,26 +31,56 @@ namespace Script.Card
         //进入该区域时调用
         public void OnPointerEnter(PointerEventData eventData)
         {
-           Debug.Log(cardName);
-           Vector3 currentPostion = gameObject.transform.localPosition;
-           currentPostion.y = 20;
-           transform.localPosition = currentPostion;
+            if (HandCardArea.GetInstance().cardToUse == null)
+            {
+                Vector3 currentPostion = gameObject.transform.localPosition;
+                currentPostion.y = 20;
+                transform.localPosition = currentPostion;
+            }
         }
 
         //离开该区域时调用
         public void OnPointerExit(PointerEventData eventData)
         {
-            Debug.Log(cardName);
-            Vector3 currentPostion = gameObject.transform.localPosition;
-            currentPostion.y = 0;
-            transform.localPosition = currentPostion;
+            if (HandCardArea.GetInstance().cardToUse == null)
+            {
+                Vector3 currentPostion = gameObject.transform.localPosition;
+                currentPostion.y = 0;
+                transform.localPosition = currentPostion;
+            }
         }
 
+        private float lastClickTime = 0;
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log("点击了:"+cardName);
-            gameObject.transform.SetAsLastSibling();
+
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                if (Time.time - lastClickTime < 0.3f)
+                {
+                    Debug.Log("双击了:"+cardName);
+
+                }
+                else
+                {
+                    Debug.Log("单击了:"+cardName);
+                    gameObject.transform.SetAsLastSibling();
+                    HandCardArea.GetInstance().cardToUse = transform;
+
+                }
+            }
+            else if (eventData.button == PointerEventData.InputButton.Right)//右键取消选中
+            {
+                HandCardArea.GetInstance().cardToUse = null;
+            }
+            
+            
+
+            lastClickTime = Time.time;
 
         }
+        
+        
+        
     }
 }

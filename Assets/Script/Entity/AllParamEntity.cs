@@ -11,6 +11,8 @@ namespace Script.Entity
         //卡组
         private List<CardInfo> _deckCards = new List<CardInfo>();
         
+        
+        
 
         public List<CardInfo> GETDeckCards()
         {
