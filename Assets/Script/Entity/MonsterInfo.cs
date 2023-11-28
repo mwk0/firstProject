@@ -16,7 +16,7 @@ namespace Script.Entity
         public string health;
         public string speed;
         public string desc;
-        public List<Behaviour> behaviorList;
+        public List<BehaviorInfo> behaviorList;
 
     }
 }

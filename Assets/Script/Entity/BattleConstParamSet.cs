@@ -24,5 +24,6 @@ namespace Script.Entity
         public GameObject graveArea;//墓地区域
         public Vector3 deckOutPosition;//屏幕外的卡组卡牌位置
         public Vector3 graveOutPosition;//屏幕外的墓地卡牌位置
+        
     }
 }
