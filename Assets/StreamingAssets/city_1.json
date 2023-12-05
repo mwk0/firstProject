@@ -1,0 +1,22 @@
+{
+  "id":1,
+  "name":"新手村",
+  "passConfigs": [
+    {
+      "id": "1",
+      "cityId": "1",
+      "no": "P01001",
+      "name": "初始教学1",
+      "type": "battle",
+      "monsterConfig": "M001,M001,M001,M001"
+    },
+    {
+      "id": "2",
+      "cityId": "1",
+      "no": "P01002",
+      "name": "初始教学2",
+      "type": "battle",
+      "monsterConfig": "M001,M001,M001,M001"
+    }
+  ]
+}

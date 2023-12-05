@@ -12,9 +12,36 @@ namespace Script.Card
     {
         //battle全局参数，单例
         public BattleConstParamSet BattleConstParamSet;
-        
-        public Transform cardToUse;
-        
+
+        //状态
+        public int stateCode = AppConstant.handCardState_wait;
+        public CardCreater cardToUse;
+
+
+        private void Update()
+        {
+            /*if (Input.GetMouseButtonDown(0))
+            {
+                if (stateCode is AppConstant.handCardState_cardToUse)
+                {
+                   
+                    
+                }
+            }*/
+
+            if (Input.GetMouseButtonDown(1))//右键取消
+            {
+                if (stateCode is AppConstant.handCardState_cardToUse)
+                {
+                    cardToUse = null;
+                    stateCode = AppConstant.handCardState_wait;
+                    //手牌回原位
+                    cardToUse.CardDown();
+                    
+                }
+            }
+        }
+
 
         //游戏开始生成卡组
         public void InitDeck(List<CardInfo> deckCardInfoList)
@@ -50,10 +77,10 @@ namespace Script.Card
             ResetHandCardPositon();
         }
 
-        //洗牌
+        //重新洗牌
         public void ShuffleDeck(List<GameObject> cardFrameList)
         {
-            ListUtil.Shuffle(cardFrameList);
+            
         }
 
         public void ResetHandCardPositon()
@@ -102,6 +129,23 @@ namespace Script.Card
             }
 
             return cardXPostionArray;
+        }
+
+        /// <summary>
+        /// 弃牌
+        /// </summary>
+        /// <param name="num">弃牌数量</param>
+        /// <param name="isRandom">是否随机</param>
+        public void Discards(int num,bool isRandom)
+        {
+            if (isRandom)//随机弃牌
+            {
+                
+            }
+            else
+            {
+                
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Script.Entity;
 using Script.Pub.Singletonbase;
+using Script.Util;
 using UnityEngine;
 using Object = System.Object;
 using Random = System.Random;
@@ -29,6 +30,13 @@ namespace Script.MainTest
             }
             Debug.Log(allParams.GETDeckCards().Count);
             Debug.Log(allCardCount);
+            
+            //读取城市关卡配置
+            string cityName = "city_1";
+            int passIndex = 0;
+            CityConfig cityConfig = JsonUtil.GETObjectFromJsonFile<CityConfig>(cityName);
+            PassConfig passConfig = cityConfig.passConfigs[passIndex];
+            
         }
     }
 }
