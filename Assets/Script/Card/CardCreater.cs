@@ -15,7 +15,8 @@ namespace Script.Card
         public string cardName;
         public Image image;
         public TextMeshProUGUI cardText;
-        public TextMeshProUGUI cardCost;
+        public TextMeshProUGUI cardCost_str;
+        public TextMeshProUGUI cardCost_int;
         public CardInfo cardInfo;
 
         
@@ -26,7 +27,8 @@ namespace Script.Card
             cardName = cardInfo.carName;
             image.sprite = cardInfo.cardArt;
             cardText.text = cardInfo.cardText;
-            cardCost.text = cardInfo.cardCost.ToString();
+            cardCost_str.text = cardInfo.cardCost_str.ToString();
+            cardCost_int.text = cardInfo.cardCost_int.ToString();
         }
 
         //进入该区域时调用
@@ -52,6 +54,13 @@ namespace Script.Card
         private float lastClickTime = 0;
         public void OnPointerClick(PointerEventData eventData)
         {
+            string errorMessage;
+            if (!checkPointCondition(out errorMessage))
+            {
+                //TODO 显示提示信息
+                return;
+            }
+            
             int stateCode = HandCardArea.GetInstance().stateCode;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
@@ -115,6 +124,29 @@ namespace Script.Card
             Vector3 currentPostion = gameObject.transform.localPosition;
             currentPostion.y = 20;
             transform.localPosition = currentPostion;
+        }
+
+        /// <summary>
+        /// 检查是否可用
+        /// </summary>
+        /// <param name="errorDetail"></param>
+        /// <returns></returns>
+        public bool checkPointCondition(out string errorDetail)
+        {
+            HeroInfo heroInfo = BattleManager.GetInstance().currentHero;
+            if (cardInfo.cardCost_str > heroInfo.attrStr)
+            {
+                errorDetail = "剩余力量点数不足";
+                return false;
+            }
+
+            if (cardInfo.cardCost_int > heroInfo.attrInt)
+            {
+                errorDetail = "剩余智力点数不足";
+                return false;
+            }
+            errorDetail = "";
+            return true;
         }
         
         

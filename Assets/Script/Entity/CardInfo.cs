@@ -13,7 +13,8 @@ namespace Script.Entity
         public string carName;
         public Sprite cardArt;
         public string cardText;
-        public int cardCost;
+        public int cardCost_str;//力量消耗
+        public int cardCost_int;//智力消耗
         //目标 dcba 1234 
         //4    1 or 2 or 3 or 4
         //12   1 and 2
@@ -31,5 +32,9 @@ namespace Script.Entity
         public int drawNum;
         //弃牌数量
         public int disCardNum;
+        //毒量
+        public int posionNum;
+        //毒回合
+        public int posionRound;
     }
 }

@@ -13,6 +13,7 @@ namespace Script.Entity
         public string type;
         public string level;
         public string attack;
+        public string defense;
         public string health;
         public string speed;
         public string desc;
