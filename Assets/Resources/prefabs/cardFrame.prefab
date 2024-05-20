@@ -441,5 +441,6 @@ MonoBehaviour:
   cardName: 
   image: {fileID: 9106047236803205651}
   cardText: {fileID: 9106047236102767963}
-  cardCost: {fileID: 9106047236706701875}
+  cardCost_str: {fileID: 9106047236706701875}
+  cardCost_int: {fileID: 9106047236706701875}
   cardInfo: {fileID: 0}

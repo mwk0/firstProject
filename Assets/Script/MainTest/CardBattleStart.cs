@@ -32,7 +32,7 @@ namespace Script.MainTest
             Debug.Log(allCardCount);
             
             //读取城市关卡配置
-            string cityName = "city_1";
+            string cityName = "city_1.json";
             int passIndex = 0;
             CityConfig cityConfig = JsonUtil.GETObjectFromJsonFile<CityConfig>(cityName);
             PassConfig passConfig = cityConfig.passConfigs[passIndex];
