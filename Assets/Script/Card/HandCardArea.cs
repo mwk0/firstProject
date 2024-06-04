@@ -89,7 +89,6 @@ namespace Script.Card
         {
             float[] cardXPostionArray = GetHandCardTargetPosition(BattleConstParamSet._handCardFrames.Count);
             //动画执行链
-            //LTSeq seq = LeanTween.sequence();
             Sequence sequence = DOTween.Sequence();
             for (int i = 0; i < BattleConstParamSet._handCardFrames.Count; i++)
             {
@@ -98,16 +97,8 @@ namespace Script.Card
                     .DOLocalMove(new Vector3(cardXPostionArray[i], 0, 0), 1f));
                 sequence.Join(BattleConstParamSet._handCardFrames[i].transform
                     .DOScale(Vector3.one,1f));
-                
-                /*LTDescr ltDescr = LeanTween.moveLocal(BattleConstParamSet._handCardFrames[i],
-                        new Vector3(cardXPostionArray[i], 0, 0), 0.3f)
-                    .setEaseInOutQuart();
-                seq.append(ltDescr);
-                seq.append(LeanTween.scale(BattleConstParamSet._handCardFrames[i], Vector3.one, 0.2f));*/
             }
-            /*LeanTween.moveLocal(_handCardFrames[0], new Vector3(cardXPostionArray[0], 0, 0), 5f)
-                .setEaseInOutQuart();
-            LeanTween.scale(_handCardFrames[0], Vector3.one, 5f);*/
+         
         }
 
         //计算所有手牌的位置

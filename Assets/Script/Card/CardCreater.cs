@@ -8,10 +8,9 @@ using UnityEngine.UI;
 
 namespace Script.Card
 {
-    public class CardCreater:MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
+    public class CardCreater:MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler,IDragHandler
     {
-       
-
+        
         public string cardName;
         public Image image;
         public TextMeshProUGUI cardText;
@@ -55,11 +54,11 @@ namespace Script.Card
         public void OnPointerClick(PointerEventData eventData)
         {
             string errorMessage;
-            if (!checkPointCondition(out errorMessage))
+            /*if (!checkPointCondition(out errorMessage))
             {
                 //TODO 显示提示信息
                 return;
-            }
+            }*/
             
             int stateCode = HandCardArea.GetInstance().stateCode;
             if (eventData.button == PointerEventData.InputButton.Left)
@@ -148,8 +147,23 @@ namespace Script.Card
             errorDetail = "";
             return true;
         }
-        
-        
-        
+
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            Vector3 pos;//用以接收世界空间中的点
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle
+                (
+                    (RectTransform)transform, //要在其中查找点的 RectTransform
+                    eventData.position, //屏幕空间位置
+                    eventData.pressEventCamera, //与屏幕空间位置关联的摄像机
+                    out pos //世界空间中的点
+                )
+               )
+            {
+                transform.position = pos;
+            }
+            
+        }
     }
 }
