@@ -66,6 +66,30 @@ namespace Script.Card
             }
         }
 
+        /// <summary>
+        /// 初始化战场格子
+        /// </summary>
+        public void InitBattleCell()
+        {
+            //计算间隔
+            float battle_area_height = BattleConstParamSet.battleArea.GetComponent<RectTransform>().rect.height;
+            float battle_area_width = BattleConstParamSet.battleArea.GetComponent<RectTransform>().rect.width;
+            float cell_height = BattleConstParamSet.cellPrefab.GetComponent<SpriteRenderer>().bounds.size.y;
+            float cell_width = BattleConstParamSet.cellPrefab.GetComponent<SpriteRenderer>().bounds.size.x;
+            float space_v = (battle_area_height - (cell_height * 4)) / 5;
+            float space_h = (battle_area_width - (cell_width * 12)) / 13;
+            //4行，10列
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    
+                }
+            }
+            GameObject cell = Instantiate(BattleConstParamSet.cellPrefab, BattleConstParamSet.battleArea.transform);
+            
+        }
+
         public void DrawCards(int num)
         {
             for (int i = 0; i < num; i++)
@@ -88,8 +112,6 @@ namespace Script.Card
         public void ResetHandCardPositon()
         {
             float[] cardXPostionArray = GetHandCardTargetPosition(BattleConstParamSet._handCardFrames.Count);
-            //动画执行链
-            //LTSeq seq = LeanTween.sequence();
             Sequence sequence = DOTween.Sequence();
             for (int i = 0; i < BattleConstParamSet._handCardFrames.Count; i++)
             {
@@ -98,16 +120,7 @@ namespace Script.Card
                     .DOLocalMove(new Vector3(cardXPostionArray[i], 0, 0), 1f));
                 sequence.Join(BattleConstParamSet._handCardFrames[i].transform
                     .DOScale(Vector3.one,1f));
-                
-                /*LTDescr ltDescr = LeanTween.moveLocal(BattleConstParamSet._handCardFrames[i],
-                        new Vector3(cardXPostionArray[i], 0, 0), 0.3f)
-                    .setEaseInOutQuart();
-                seq.append(ltDescr);
-                seq.append(LeanTween.scale(BattleConstParamSet._handCardFrames[i], Vector3.one, 0.2f));*/
             }
-            /*LeanTween.moveLocal(_handCardFrames[0], new Vector3(cardXPostionArray[0], 0, 0), 5f)
-                .setEaseInOutQuart();
-            LeanTween.scale(_handCardFrames[0], Vector3.one, 5f);*/
         }
 
         //计算所有手牌的位置
