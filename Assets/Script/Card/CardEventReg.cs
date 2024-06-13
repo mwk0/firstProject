@@ -26,6 +26,8 @@ namespace Script.Card
             battleConstParamSet.graveOutPosition = GameObject.Find("graveOut").transform.position;
             battleConstParamSet.CardFrameWidth = battleConstParamSet._cardFramePrefab.GetComponent<RectTransform>().rect.width;
             battleConstParamSet.HandAreaWidth = battleConstParamSet.handCardArea.GetComponent<RectTransform>().rect.width;
+            battleConstParamSet.cellPrefab = (GameObject)Resources.Load("prefabs/cell");
+            battleConstParamSet.battleArea = GameObject.Find("battleArea");
             //给手牌区域组件设置参数
             HandCardArea handCardArea = HandCardArea.GetInstance();
             handCardArea.BattleConstParamSet = battleConstParamSet;
@@ -35,6 +37,7 @@ namespace Script.Card
             EventCenter.AddListener(EventDefine.initDeck, initDeck);
             Action<int> drawCards = handCardArea.DrawCards;
             EventCenter.AddListener(EventDefine.drawCards,drawCards);
+            
         }
         
         private void Start()

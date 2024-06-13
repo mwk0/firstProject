@@ -25,5 +25,12 @@ namespace Script.Entity
         public Vector3 deckOutPosition;//屏幕外的卡组卡牌位置
         public Vector3 graveOutPosition;//屏幕外的墓地卡牌位置
         
+        //战场区域
+        public GameObject battleArea;
+        //cell预制体
+        public GameObject cellPrefab;
+        
+        
+
     }
 }

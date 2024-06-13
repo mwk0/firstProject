@@ -30,6 +30,8 @@ namespace Script.Card
             /*deck乱序转队列，形成卡组，第一次洗牌*/
             List<CardInfo> deckCardInfoList = AllParamEntity.GetInstance().GETDeckCards();
             EventCenter.TriggerEvent(EventDefine.initDeck,deckCardInfoList);
+            //生成战场单元格
+            
             //抽初始卡牌
             EventCenter.TriggerEvent(EventDefine.drawCards,BattleConstParamSet._init_handCards_Num);
             

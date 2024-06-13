@@ -132,18 +132,6 @@ namespace Script.Card
         /// <returns></returns>
         public bool checkPointCondition(out string errorDetail)
         {
-            HeroInfo heroInfo = BattleManager.GetInstance().currentHero;
-            if (cardInfo.cardCost_str > heroInfo.attrStr)
-            {
-                errorDetail = "剩余力量点数不足";
-                return false;
-            }
-
-            if (cardInfo.cardCost_int > heroInfo.attrInt)
-            {
-                errorDetail = "剩余智力点数不足";
-                return false;
-            }
             errorDetail = "";
             return true;
         }
