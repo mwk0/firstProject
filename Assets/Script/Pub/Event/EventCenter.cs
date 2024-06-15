@@ -214,6 +214,7 @@ namespace Script.Pub.Event
     public enum EventDefine
     {
         initDeck,
+        InitBattleCell,
         drawCards
     }
 

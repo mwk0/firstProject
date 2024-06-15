@@ -37,7 +37,8 @@ namespace Script.Card
             EventCenter.AddListener(EventDefine.initDeck, initDeck);
             Action<int> drawCards = handCardArea.DrawCards;
             EventCenter.AddListener(EventDefine.drawCards,drawCards);
-            
+            Action InitBattleCell = handCardArea.InitBattleCell;
+            EventCenter.AddListener(EventDefine.InitBattleCell,InitBattleCell);
         }
         
         private void Start()

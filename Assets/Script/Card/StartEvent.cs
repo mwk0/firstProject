@@ -31,7 +31,7 @@ namespace Script.Card
             List<CardInfo> deckCardInfoList = AllParamEntity.GetInstance().GETDeckCards();
             EventCenter.TriggerEvent(EventDefine.initDeck,deckCardInfoList);
             //生成战场单元格
-            
+            EventCenter.TriggerEvent(EventDefine.InitBattleCell);
             //抽初始卡牌
             EventCenter.TriggerEvent(EventDefine.drawCards,BattleConstParamSet._init_handCards_Num);
             

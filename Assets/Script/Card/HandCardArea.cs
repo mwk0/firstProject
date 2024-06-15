@@ -72,22 +72,31 @@ namespace Script.Card
         public void InitBattleCell()
         {
             //计算间隔
-            float battle_area_height = BattleConstParamSet.battleArea.GetComponent<RectTransform>().rect.height;
-            float battle_area_width = BattleConstParamSet.battleArea.GetComponent<RectTransform>().rect.width;
-            float cell_height = BattleConstParamSet.cellPrefab.GetComponent<SpriteRenderer>().bounds.size.y;
-            float cell_width = BattleConstParamSet.cellPrefab.GetComponent<SpriteRenderer>().bounds.size.x;
+            Vector3 battle_scale = BattleConstParamSet.battleArea.GetComponent<RectTransform>().localScale;
+            float battle_area_height = BattleConstParamSet.battleArea.GetComponent<RectTransform>().rect.height*battle_scale.y;
+            float battle_area_width = BattleConstParamSet.battleArea.GetComponent<RectTransform>().rect.width*battle_scale.x;
+            Vector3 cell_scale = BattleConstParamSet.cellPrefab.GetComponent<RectTransform>().localScale;
+            float cell_height = BattleConstParamSet.cellPrefab.GetComponent<RectTransform>().rect.height*cell_scale.y;
+            float cell_width = BattleConstParamSet.cellPrefab.GetComponent<RectTransform>().rect.width*cell_scale.x;
             float space_v = (battle_area_height - (cell_height * 4)) / 5;
             float space_h = (battle_area_width - (cell_width * 12)) / 13;
+            Debug.Log(space_v);
+            Debug.Log(space_h);
+
             //4行，10列
+            float offset_y = space_v+cell_height/2;//垂直偏移量
             for (int i = 0; i < 4; i++)
             {
-                for (int j = 0; j < 10; j++)
+                if (i > 0) offset_y += (space_v+cell_height);
+                float offset_x = space_h+cell_width/2;//水平偏移量
+                for (int j = 0; j < 12; j++)
                 {
-                    
+                    if(j>0) offset_x += (space_h+cell_width);
+                    GameObject cell = Instantiate(BattleConstParamSet.cellPrefab, BattleConstParamSet.battleArea.transform);
+                    cell.transform.localPosition = new Vector3(offset_x, offset_y);
                 }
             }
-            GameObject cell = Instantiate(BattleConstParamSet.cellPrefab, BattleConstParamSet.battleArea.transform);
-            
+
         }
 
         public void DrawCards(int num)
