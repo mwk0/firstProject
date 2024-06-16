@@ -83,7 +83,7 @@ namespace Script.Card
             Debug.Log(space_v);
             Debug.Log(space_h);
 
-            //4行，10列
+            //4行，12列
             float offset_y = space_v+cell_height/2;//垂直偏移量
             for (int i = 0; i < 4; i++)
             {
@@ -92,6 +92,7 @@ namespace Script.Card
                 for (int j = 0; j < 12; j++)
                 {
                     if(j>0) offset_x += (space_h+cell_width);
+                    if(j>4&&j<7)continue;
                     GameObject cell = Instantiate(BattleConstParamSet.cellPrefab, BattleConstParamSet.battleArea.transform);
                     cell.transform.localPosition = new Vector3(offset_x, offset_y);
                 }
