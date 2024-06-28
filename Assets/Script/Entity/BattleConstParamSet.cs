@@ -13,7 +13,7 @@ namespace Script.Entity
         //手牌区域左右空格
         public float HandCardPadding = 20;
         
-        public GameObject _cardFramePrefab;//卡牌预制体
+        public GameObject _cardFramePrefab_unit;//部队卡牌预制体
         public List<GameObject> _handCardFrames = new List<GameObject>();//手牌
         public Queue<GameObject> _deckQueue = new Queue<GameObject>();//卡组
 
@@ -28,7 +28,8 @@ namespace Script.Entity
         //战场区域
         public GameObject battleArea;
         //cell预制体
-        public GameObject cellPrefab;
+        public GameObject cell_build_Prefab;
+        public GameObject cell_unit_Prefab;
         
         
 

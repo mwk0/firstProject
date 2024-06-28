@@ -8,7 +8,7 @@ namespace Script.Entity
     public class AllParamEntity:SingletonBaseManager<AllParamEntity>
     {
         //全量的卡牌图鉴
-        public static CardInfo[] _allCardInfo;
+        public static List<CardInfo> _allCardInfo = new List<CardInfo>();
         //卡组
         private List<CardInfo> _deckCards = new List<CardInfo>();
         

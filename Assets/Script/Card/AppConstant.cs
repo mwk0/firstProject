@@ -35,5 +35,8 @@ namespace Script.Card
         public const int expectResultType_heal = 6;//治疗
         public const int expectResultType_death = 9;//死亡
 
+        //battleCell的类型
+        public const int battleCellType_build = 0;//建筑格子
+        public const int battleCellType_unit = 1;//部队格子
     }
 }

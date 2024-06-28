@@ -1,6 +1,5 @@
-using System;
-using System.Linq;
-using Script.Entity;
+﻿using Script.Entity;
+using Script.Prefabs;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,29 +7,51 @@ using UnityEngine.UI;
 
 namespace Script.Card
 {
-    public class CardCreater:MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler,IDragHandler
+    public class CardCreater:MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler,IDragHandler,IBeginDragHandler,IEndDragHandler
     {
-        
+
         public string cardName;
-        public Image image;
+        public Image cardArt;
         public TextMeshProUGUI cardText;
-        public TextMeshProUGUI cardCost_str;
-        public TextMeshProUGUI cardCost_int;
-        public CardInfo cardInfo;
+        public TextMeshProUGUI cardCost;
+        public TextMeshProUGUI attack;
+        public TextMeshProUGUI defense;
+        public TextMeshProUGUI health;
+        public TextMeshProUGUI morale;
+        public TextMeshProUGUI speed;
+        public TextMeshProUGUI counterAttack;
+        public TextMeshProUGUI required;
 
-        
-
-        //用cardInfo初始化
-        public void InitCardCreaterByCardinfo()
+        public void InitCardCreaterByCardinfo(CardInfo cardInfo)
         {
-            cardName = cardInfo.carName;
-            image.sprite = cardInfo.cardArt;
-            cardText.text = cardInfo.cardText;
-            cardCost_str.text = cardInfo.cardCost_str.ToString();
-            cardCost_int.text = cardInfo.cardCost_int.ToString();
+            cardName = cardInfo.cardName;
+            //部队卡牌的样式
+            if (cardInfo is CardInfoUnit)
+            {
+                CardInfoUnit cardInfoUnit = cardInfo as CardInfoUnit;
+                cardArt.sprite = Resources.Load("cardSprite/"+cardInfoUnit.cardArt) as Sprite;
+                cardText.text = cardInfoUnit.cardText;
+                cardCost.text = cardInfoUnit.cardCost.ToString();
+                attack.text = cardInfoUnit.attack.ToString();
+                defense.text = cardInfoUnit.defense.ToString();
+                health.text = cardInfoUnit.health.ToString();
+                morale.text = cardInfoUnit.morale.ToString();
+                speed.text = cardInfoUnit.speed.ToString();
+                counterAttack.text = cardInfoUnit.counterAttack.ToString();
+                required.text = cardInfoUnit.required.ToString();
+            }
+            else
+            {
+                
+            }
         }
-
-        //进入该区域时调用
+        
+        private void Start()
+        {
+          
+        }
+        
+          //进入该区域时调用
         public void OnPointerEnter(PointerEventData eventData)
         {
             int stateCode = HandCardArea.GetInstance().stateCode;
@@ -75,17 +96,7 @@ namespace Script.Card
                     if (stateCode is AppConstant.handCardState_wait)
                     {
                         Debug.Log("当前为待机状态");
-                        if (cardInfo.target.Length>1)
-                        {
-                            Debug.Log("此牌不需要目标");
-                            //结算
-                            
-                        }
-                        else
-                        {
-                            HandCardArea.GetInstance().cardToUse = this;
-                            HandCardArea.GetInstance().stateCode = AppConstant.handCardState_cardToUse;
-                        }
+                       
                         
                     }else if (stateCode is AppConstant.handCardState_discard)
                     {
@@ -152,6 +163,23 @@ namespace Script.Card
                 transform.position = pos;
             }
             
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            RaycastHit2D hitInfo = Physics2D.Raycast(Camera.main.transform.position, transform.position,Mathf.Infinity,6,-Mathf.Infinity,Mathf.Infinity);
+            if (hitInfo.collider != null)
+            {
+                BattleCell hitBattleCell = hitInfo.transform.gameObject.GetComponent<BattleCell>();
+                bool isEnemy = hitBattleCell.IsEnemy;
+                int cellType = hitBattleCell.BattleCellType;
+                
+            }
         }
     }
 }

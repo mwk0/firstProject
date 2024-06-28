@@ -17,16 +17,17 @@ namespace Script.Card
             //battle界面的参数管理类
             BattleConstParamSet battleConstParamSet = BattleConstParamSet.GetInstance();
             //初始化battle参数
-            battleConstParamSet._cardFramePrefab = (GameObject) Resources.Load("prefabs/cardFrame");
+            battleConstParamSet._cardFramePrefab_unit = (GameObject) Resources.Load("prefabs/cardFrame_unit");
             battleConstParamSet.handCardArea = GameObject.Find("handCardArea");
             battleConstParamSet.deckCardArea = GameObject.Find("deck");
             battleConstParamSet.graveArea = GameObject.Find("grave");
             battleConstParamSet.deck_icon_position = battleConstParamSet.deckCardArea.transform.position;
             battleConstParamSet.deckOutPosition = GameObject.Find("deckOut").transform.position;
             battleConstParamSet.graveOutPosition = GameObject.Find("graveOut").transform.position;
-            battleConstParamSet.CardFrameWidth = battleConstParamSet._cardFramePrefab.GetComponent<RectTransform>().rect.width;
+            battleConstParamSet.CardFrameWidth = battleConstParamSet._cardFramePrefab_unit.GetComponent<RectTransform>().rect.width;
             battleConstParamSet.HandAreaWidth = battleConstParamSet.handCardArea.GetComponent<RectTransform>().rect.width;
-            battleConstParamSet.cellPrefab = (GameObject)Resources.Load("prefabs/cell");
+            battleConstParamSet.cell_build_Prefab = (GameObject)Resources.Load("prefabs/cell_build");
+            battleConstParamSet.cell_unit_Prefab = (GameObject)Resources.Load("prefabs/cell_unit");
             battleConstParamSet.battleArea = GameObject.Find("battleArea");
             //给手牌区域组件设置参数
             HandCardArea handCardArea = HandCardArea.GetInstance();

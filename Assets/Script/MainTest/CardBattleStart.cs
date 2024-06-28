@@ -17,19 +17,21 @@ namespace Script.MainTest
             //全局参数
             AllParamEntity allParams = AllParamEntity.GetInstance();
             //加载所有的卡牌图鉴
-            CardInfo[] allCardScripteObjects = Resources.LoadAll("scripteObject/card", typeof(CardInfo)).Cast<CardInfo>().ToArray();
-            AllParamEntity._allCardInfo = allCardScripteObjects;
+            UnitCardRecord unitCardRecord = JsonUtil.GETObjectFromJsonFile<UnitCardRecord>("cardinfounit.json");
+            List<CardInfoUnit> cardInfoUnits = unitCardRecord.Records;
+            foreach (var cardInfoUnit in cardInfoUnits)
+            {
+                AllParamEntity._allCardInfo.Add(cardInfoUnit);
+            }
             
             //开始游戏(测试：从所有牌里随机挑20张)
-            int allCardCount = AllParamEntity._allCardInfo.Length;
+            int allCardCount = AllParamEntity._allCardInfo.Count;
             List<CardInfo> deck = allParams.GETDeckCards();
             Random random = new Random();
             for (int i = 0; i < 100; i++)
             {
                 deck.Add(AllParamEntity._allCardInfo[random.Next(allCardCount)]);
             }
-            Debug.Log(allParams.GETDeckCards().Count);
-            Debug.Log(allCardCount);
             
             //读取城市关卡配置
             string cityName = "city_1.json";

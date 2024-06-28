@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using Script.Entity;
+using Script.Prefabs;
 using Script.Pub.Singletonbase;
 using Script.Util;
-using Unity.VisualScripting;
 using UnityEngine;
 using Sequence = DG.Tweening.Sequence;
 
@@ -20,16 +20,18 @@ namespace Script.Card
         public CardCreater cardToUse;
 
 
+        private float time = 0;
+
         private void Update()
         {
-            /*if (Input.GetMouseButtonDown(0))
+            if (time > 1)
             {
-                if (stateCode is AppConstant.handCardState_cardToUse)
-                {
-                   
-                    
-                }
-            }*/
+                Debug.Log("当前状态："+stateCode);
+                Debug.Log("待用："+(cardToUse==null?"":cardToUse.cardName));
+                time = 0;
+            }
+
+            time += Time.deltaTime;
 
             if (Input.GetMouseButtonDown(1))//右键取消
             {
@@ -44,6 +46,11 @@ namespace Script.Card
             }
         }
 
+        public void cardCursor()
+        {
+          
+        }
+
 
         //游戏开始生成卡组
         public void InitDeck(List<CardInfo> deckCardInfoList)
@@ -52,15 +59,14 @@ namespace Script.Card
             ListUtil.Shuffle(deckCardInfoList);
             foreach (var cardInfo in deckCardInfoList)
             {
-                GameObject cardFrame = Instantiate(BattleConstParamSet._cardFramePrefab,
+                GameObject cardFrame = Instantiate(BattleConstParamSet._cardFramePrefab_unit,
                     BattleConstParamSet.deckCardArea.transform);
                 //缩小
                 cardFrame.transform.localScale = new Vector3(0.5f, 0.5f, 1f);
                 cardFrame.transform.position = BattleConstParamSet.deckOutPosition; //放到屏幕外
                 //设置卡牌信息
                 CardCreater cardCreater = cardFrame.GetComponent<CardCreater>();
-                cardCreater.cardInfo = cardInfo;
-                cardCreater.InitCardCreaterByCardinfo();
+                cardCreater.InitCardCreaterByCardinfo(cardInfo);
                 //加入卡组
                 BattleConstParamSet._deckQueue.Enqueue(cardFrame);
             }
@@ -70,14 +76,14 @@ namespace Script.Card
         /// 初始化战场格子
         /// </summary>
         public void InitBattleCell()
-        {
+        {       
             //计算间隔
             Vector3 battle_scale = BattleConstParamSet.battleArea.GetComponent<RectTransform>().localScale;
             float battle_area_height = BattleConstParamSet.battleArea.GetComponent<RectTransform>().rect.height*battle_scale.y;
             float battle_area_width = BattleConstParamSet.battleArea.GetComponent<RectTransform>().rect.width*battle_scale.x;
-            Vector3 cell_scale = BattleConstParamSet.cellPrefab.GetComponent<RectTransform>().localScale;
-            float cell_height = BattleConstParamSet.cellPrefab.GetComponent<RectTransform>().rect.height*cell_scale.y;
-            float cell_width = BattleConstParamSet.cellPrefab.GetComponent<RectTransform>().rect.width*cell_scale.x;
+            Vector3 cell_scale = BattleConstParamSet.cell_build_Prefab.transform.localScale;
+            float cell_height = BattleConstParamSet.cell_build_Prefab.GetComponent<SpriteRenderer>().sprite.bounds.size.y * cell_scale.y;
+            float cell_width = BattleConstParamSet.cell_build_Prefab.GetComponent<SpriteRenderer>().sprite.bounds.size.x * cell_scale.x;
             float space_v = (battle_area_height - (cell_height * 4)) / 5;
             float space_h = (battle_area_width - (cell_width * 12)) / 13;
             Debug.Log(space_v);
@@ -92,8 +98,24 @@ namespace Script.Card
                 for (int j = 0; j < 12; j++)
                 {
                     if(j>0) offset_x += (space_h+cell_width);
-                    if(j>4&&j<7)continue;
-                    GameObject cell = Instantiate(BattleConstParamSet.cellPrefab, BattleConstParamSet.battleArea.transform);
+                    if(j==1||j==10||(j>4&&j<7)||(i==3&&(j==0||j==11)))continue;
+                    GameObject cell;
+                    bool isEnemy = j > 6;
+                    if (i==3 || j == 0 || j == 11)
+                    {
+                        cell = Instantiate(BattleConstParamSet.cell_build_Prefab, BattleConstParamSet.battleArea.transform);
+                        BattleCell battleCell = cell.GetComponent<BattleCell>();
+                        battleCell.IsEnemy = isEnemy;
+                        battleCell.BattleCellType = AppConstant.battleCellType_build;
+                    }
+                    else
+                    {
+                        cell = Instantiate(BattleConstParamSet.cell_unit_Prefab, BattleConstParamSet.battleArea.transform);
+                        BattleCell battleCell = cell.GetComponent<BattleCell>();
+                        battleCell.IsEnemy = isEnemy;
+                        battleCell.BattleCellType = AppConstant.battleCellType_unit;
+                    }
+                    cell.layer = 6;//图层为cell
                     cell.transform.localPosition = new Vector3(offset_x, offset_y);
                 }
             }

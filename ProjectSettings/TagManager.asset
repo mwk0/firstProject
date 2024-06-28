@@ -5,7 +5,6 @@ TagManager:
   serializedVersion: 2
   tags:
   - ally
-  - enemy
   layers:
   - Default
   - TransparentFX
@@ -13,7 +12,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - cell
   - 
   - 
   - 
@@ -42,4 +41,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: cell
+    uniqueID: 1034515945
     locked: 0

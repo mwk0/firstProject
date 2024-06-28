@@ -1,0 +1,14 @@
+{
+  "RECORDS": [
+    {
+      "id": "1",
+      "no": "s001",
+      "skillName": "冲锋I",
+      "skillType": "buff",
+      "timePoint": "attack_before",
+      "target": "self",
+      "property": "attack",
+      "val": "${target.speed}-${enemy.speed}"
+    }
+  ]
+}
