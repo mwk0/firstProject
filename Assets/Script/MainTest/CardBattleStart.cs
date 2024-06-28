@@ -18,7 +18,7 @@ namespace Script.MainTest
             AllParamEntity allParams = AllParamEntity.GetInstance();
             //加载所有的卡牌图鉴
             UnitCardRecord unitCardRecord = JsonUtil.GETObjectFromJsonFile<UnitCardRecord>("cardinfounit.json");
-            List<CardInfoUnit> cardInfoUnits = unitCardRecord.Records;
+            List<CardInfoUnit> cardInfoUnits = unitCardRecord.records.ToList();
             foreach (var cardInfoUnit in cardInfoUnits)
             {
                 AllParamEntity._allCardInfo.Add(cardInfoUnit);
