@@ -29,7 +29,7 @@ namespace Script.Card
             if (cardInfo is CardInfoUnit)
             {
                 CardInfoUnit cardInfoUnit = cardInfo as CardInfoUnit;
-                cardArt.sprite = Resources.Load("cardSprite/"+cardInfoUnit.cardArt) as Sprite;
+                cardArt.sprite = Resources.Load("cardSprite/"+cardInfoUnit.cardArt,typeof(Sprite)) as Sprite;
                 cardText.text = cardInfoUnit.cardText;
                 cardCost.text = cardInfoUnit.cardCost.ToString();
                 attack.text = cardInfoUnit.attack.ToString();
